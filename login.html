@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shortlist — Sign in / Sign up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <main class="auth-wrap">
+    <video class="auth-video" autoplay muted loop playsinline
+      data-hls="https://stream.mux.com/8wrHPCX2dC3msyYU9ObwqNdm00u3ViXvOSHUMRYSEe5Q.m3u8"></video>
+    <div class="auth-overlay"></div>
+
+    <a class="auth-back" href="index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Back
+    </a>
+
+    <div class="auth-card liquid-glass fade-up">
+      <!-- ── LOGIN CONTAINER ── -->
+      <div id="login-container">
+        <div class="auth-head">
+          <div class="logo-mark"><div class="logo-outer"></div><div class="logo-inner"></div></div>
+          <h1>Welcome <span class="serif">back</span></h1>
+          <p>Sign in to your Shortlist workspace.</p>
+        </div>
+
+        <div class="auth-err" id="login-err" style="display:none; color: #f0616d; background: rgba(240, 97, 109, 0.1); border: 1px solid rgba(240, 97, 109, 0.2); padding: 0.75rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; text-align: center;"></div>
+
+        <form id="login-form" novalidate>
+          <div class="field">
+            <label for="login-email">Email</label>
+            <input id="login-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="login-password">Password</label>
+            <input id="login-password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+          </div>
+          <div class="auth-row">
+            <label><input type="checkbox" name="remember"> Remember me</label>
+            <a href="#">Forgot password?</a>
+          </div>
+          <button class="btn-primary btn-full" type="submit">Sign in</button>
+        </form>
+
+        <div class="auth-divider">or</div>
+        <button class="auth-oauth liquid-glass" type="button" onclick="bypassLogin()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.5rem; display: inline-block; vertical-align: middle;"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 14a8 8 0 0 1-6-2.7c0-2 4-3.1 6-3.1s6 1.1 6 3.1A8 8 0 0 1 12 20z"/></svg>
+          <span style="vertical-align: middle;">Continue as guest</span>
+        </button>
+
+        <p class="auth-foot">New to Shortlist? <a href="#" id="go-signup">Create an account</a></p>
+      </div>
+
+      <!-- ── SIGNUP CONTAINER ── -->
+      <div id="signup-container" style="display:none;">
+        <div class="auth-head">
+          <div class="logo-mark"><div class="logo-outer"></div><div class="logo-inner"></div></div>
+          <h1>Create <span class="serif">account</span></h1>
+          <p>Start your Shortlist journey today.</p>
+        </div>
+
+        <div class="auth-err" id="signup-err" style="display:none; color: #f0616d; background: rgba(240, 97, 109, 0.1); border: 1px solid rgba(240, 97, 109, 0.2); padding: 0.75rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; text-align: center;"></div>
+
+        <form id="signup-form" novalidate>
+          <div class="field">
+            <label for="signup-name">Display Name</label>
+            <input id="signup-name" name="name" type="text" placeholder="John Doe" required>
+          </div>
+          <div class="field">
+            <label for="signup-email">Email</label>
+            <input id="signup-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="signup-password">Password</label>
+            <input id="signup-password" name="password" type="password" placeholder="••••••••" autocomplete="new-password" required>
+          </div>
+          <button class="btn-primary btn-full" type="submit">Create account</button>
+        </form>
+
+        <p class="auth-foot">Already have an account? <a href="#" id="go-login">Sign in</a></p>
+      </div>
+
+      <!-- ── VERIFY CONTAINER ── -->
+      <div id="verify-container" style="display:none;">
+        <div class="auth-head">
+          <div class="logo-mark"><div class="logo-outer"></div><div class="logo-inner"></div></div>
+          <h1>Verify <span class="serif">email</span></h1>
+          <p>Enter the 6-digit code to verify your email.</p>
+        </div>
+
+        <div class="auth-err" id="verify-err" style="display:none; color: #f0616d; background: rgba(240, 97, 109, 0.1); border: 1px solid rgba(240, 97, 109, 0.2); padding: 0.75rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; text-align: center;"></div>
+
+        <form id="verify-form" novalidate>
+          <div class="field">
+            <label for="verify-code">Verification Code</label>
+            <input id="verify-code" name="code" type="text" placeholder="123456" pattern="[0-9]{6}" maxlength="6" style="text-align:center; font-size:1.5rem; letter-spacing:0.5rem; font-family: monospace;" required>
+          </div>
+          <p style="font-size:0.8rem; opacity:0.6; text-align:center; margin: 1rem 0; line-height: 1.4;">
+            Demo Mode: Code is saved to <code style="background:rgba(255,255,255,0.1); padding:2px 4px; border-radius:4px; font-family: monospace;">data/last_verification_code.txt</code>
+          </p>
+          <button class="btn-primary btn-full" type="submit">Verify email</button>
+        </form>
+        <div style="text-align:center; margin-top:1.2rem;">
+          <button id="resend-code-btn" type="button" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:0.9rem; text-decoration: underline; opacity: 0.8;">Resend Code</button>
+        </div>
+        <p class="auth-foot"><a href="#" id="verify-cancel">Back to Sign in</a></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
+  <script src="js/main.js"></script>
+  
+  <script>
+    // Navigation / UI switching
+    const loginContainer = document.getElementById('login-container');
+    const signupContainer = document.getElementById('signup-container');
+    const verifyContainer = document.getElementById('verify-container');
+
+    const goSignup = document.getElementById('go-signup');
+    const goLogin = document.getElementById('go-login');
+    const verifyCancel = document.getElementById('verify-cancel');
+
+    let currentEmail = '';
+
+    goSignup.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginContainer.style.display = 'none';
+      signupContainer.style.display = 'block';
+      verifyContainer.style.display = 'none';
+    });
+
+    goLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginContainer.style.display = 'block';
+      signupContainer.style.display = 'none';
+      verifyContainer.style.display = 'none';
+    });
+
+    verifyCancel.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginContainer.style.display = 'block';
+      signupContainer.style.display = 'none';
+      verifyContainer.style.display = 'none';
+    });
+
+    // Form logic
+    const loginForm = document.getElementById('login-form');
+    const loginErr = document.getElementById('login-err');
+
+    const signupForm = document.getElementById('signup-form');
+    const signupErr = document.getElementById('signup-err');
+
+    const verifyForm = document.getElementById('verify-form');
+    const verifyErr = document.getElementById('verify-err');
+    const resendBtn = document.getElementById('resend-code-btn');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginErr.style.display = 'none';
+      const email = loginForm.email.value.trim();
+      const password = loginForm.password.value;
+
+      if (!email || !password) {
+        showErr(loginErr, 'Please fill in all fields.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (res.status === 200) {
+          const data = await res.json();
+          localStorage.setItem('sl_user', JSON.stringify(data));
+          window.location.href = 'dashboard.html';
+        } else if (res.status === 401) {
+          // Unverified
+          currentEmail = email;
+          loginContainer.style.display = 'none';
+          signupContainer.style.display = 'none';
+          verifyContainer.style.display = 'block';
+          showErr(verifyErr, 'Email is not verified yet. Please enter the verification code.');
+        } else {
+          const errData = await res.json();
+          showErr(loginErr, errData.detail || 'Invalid email or password.');
+        }
+      } catch (err) {
+        showErr(loginErr, 'Server error. Please make sure the backend is running.');
+      }
+    });
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      signupErr.style.display = 'none';
+      const name = signupForm.name.value.trim();
+      const email = signupForm.email.value.trim();
+      const password = signupForm.password.value;
+
+      if (!name || !email || !password) {
+        showErr(signupErr, 'Please fill in all fields.');
+        return;
+      }
+      if (password.length < 6) {
+        showErr(signupErr, 'Password must be at least 6 characters.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+
+        if (res.ok) {
+          currentEmail = email;
+          signupContainer.style.display = 'none';
+          verifyContainer.style.display = 'block';
+          showErr(verifyErr, 'Verification code generated! Check data/last_verification_code.txt.', 'info');
+        } else {
+          const errData = await res.json();
+          showErr(signupErr, errData.detail || 'Sign up failed.');
+        }
+      } catch (err) {
+        showErr(signupErr, 'Server error. Please make sure the backend is running.');
+      }
+    });
+
+    verifyForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      verifyErr.style.display = 'none';
+      const code = verifyForm.code.value.trim();
+
+      if (!code || code.length !== 6) {
+        showErr(verifyErr, 'Enter a valid 6-digit code.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentEmail, code })
+        });
+
+        if (res.ok) {
+          alert('Email verified successfully! You can now sign in.');
+          loginContainer.style.display = 'block';
+          verifyContainer.style.display = 'none';
+          loginForm.email.value = currentEmail;
+          loginForm.password.value = '';
+        } else {
+          const errData = await res.json();
+          showErr(verifyErr, errData.detail || 'Invalid verification code.');
+        }
+      } catch (err) {
+        showErr(verifyErr, 'Server error. Please try again.');
+      }
+    });
+
+    resendBtn.addEventListener('click', async () => {
+      verifyErr.style.display = 'none';
+      if (!currentEmail) return;
+      try {
+        const res = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: 'User', email: currentEmail, password: 'dummy_password' }) // triggers code regeneration
+        });
+        if (res.ok) {
+          showErr(verifyErr, 'Code resent! Check data/last_verification_code.txt.', 'info');
+        } else {
+          showErr(verifyErr, 'Resend failed.');
+        }
+      } catch (err) {
+        showErr(verifyErr, 'Server error.');
+      }
+    });
+
+    function showErr(el, msg, type = 'error') {
+      el.textContent = msg;
+      el.style.display = 'block';
+      if (type === 'info') {
+        el.style.color = '#9fb0c3';
+        el.style.background = 'rgba(255, 255, 255, 0.05)';
+        el.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+      } else {
+        el.style.color = '#f0616d';
+        el.style.background = 'rgba(240, 97, 109, 0.1)';
+        el.style.borderColor = 'rgba(240, 97, 109, 0.2)';
+      }
+    }
+
+    function bypassLogin() {
+      // Continue as guest
+      localStorage.setItem('sl_user', JSON.stringify({ email: 'guest@example.com', name: 'Guest' }));
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name": "board",
+  "description": "Shortlist operator board: paste a job description, get a verdict with cited proof from your resume, and work the application pipeline.",
+  "public_slug": "shortlist-board",
+  "visibility": "POD"
+}

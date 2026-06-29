@@ -1,0 +1,16 @@
+Title: AI/ML Robotics Engineer (Remote)
+Company: NextGen Robotics
+
+Responsibilities:
+- Build and deploy deep learning models for computer vision and multimodal AI systems on edge devices.
+- Develop embedded firmware for microcontrollers (ESP32) using C/C++ and FreeRTOS.
+- Integrate ML models with ROS 2 or micro-ROS for robotic control loops.
+- Build REST APIs using FastAPI to serve ML model predictions.
+- Optimize deep learning inference pipelines on edge hardware.
+
+Required Skills:
+- Strong experience with Python, C/C++, and PyTorch.
+- Experience with embedded systems, ESP32, and RTOS.
+- Hands-on experience with ROS 2 or micro-ROS.
+- Backend development experience with FastAPI.
+- Familiarity with vector databases (e.g., FAISS).

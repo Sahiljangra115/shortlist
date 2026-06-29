@@ -1,0 +1,4 @@
+{
+  "description": "The candidate's resume (cv.md). Documents here are auto-indexed (text extracted, chunked, embedded) and are the matcher's only source of evidence. Upload the file after import: lemma files upload ./cv.md /resume/cv.md",
+  "visibility": "POD"
+}

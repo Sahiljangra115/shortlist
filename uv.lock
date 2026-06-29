@@ -1,0 +1,31 @@
+version = 1
+revision = 3
+requires-python = ">=3.13"
+
+[manifest]
+members = [
+    "gappy",
+    "venv",
+    "vevn",
+]
+
+[[package]]
+name = "gappy"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "venv" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "venv", editable = "venv" }]
+
+[[package]]
+name = "venv"
+version = "0.1.0"
+source = { editable = "venv" }
+
+[[package]]
+name = "vevn"
+version = "0.1.0"
+source = { virtual = "vevn" }

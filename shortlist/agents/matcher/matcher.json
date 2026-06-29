@@ -1,0 +1,48 @@
+{
+  "name": "matcher",
+  "description": "Compares one job description against the candidate's resume and writes a verdict row (STRONG FIT / STRETCH / SKIP) with cited proof, gaps, and a tailored intro draft.",
+  "instruction": { "$file": "instruction.md" },
+  "toolsets": ["POD"],
+  "visibility": "POD",
+  // Use Lemma's own model, not any local daemon or user subscription.
+  "agent_runtime": {
+    "profile_id": "system:lemma",
+    "model_name": "glm-5.2"
+  },
+  // Forces a structured return the board app can render directly.
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "company": { "type": "string" },
+      "role": { "type": "string" },
+      "verdict": { "type": "string", "enum": ["STRONG FIT", "STRETCH", "SKIP"] },
+      "score": { "type": "number" },
+      "archetype": { "type": "string" },
+      "proof": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "requirement": { "type": "string" },
+            "resume_evidence": { "type": "string" }
+          },
+          "required": ["requirement", "resume_evidence"]
+        }
+      },
+      "gaps": { "type": "array", "items": { "type": "string" } },
+      "draft_message": { "type": "string" },
+      "legitimacy": { "type": "string", "enum": ["High Confidence", "Proceed with Caution", "Suspicious"] },
+      "record_id": { "type": "string" }
+    },
+    "required": ["verdict", "score", "proof", "gaps", "draft_message"]
+  },
+  // Zero access by default; grant exactly what the agent touches.
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "applications",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] },
+    { "resource_type": "folder", "resource_name": "/resume",
+      "permission_ids": ["folder.read"] },
+    { "resource_type": "function", "resource_name": "verify_citation",
+      "permission_ids": ["function.read", "function.execute"] }
+  ]}
+}

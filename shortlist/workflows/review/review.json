@@ -1,0 +1,33 @@
+{
+  "name": "review",
+  "description": "Approval workflow for STRETCH applications before applying.",
+  "start": { 
+    "type": "DATASTORE_EVENT", 
+    "config": { 
+      "table_name": "applications", 
+      "event_type": "INSERT", 
+      "condition": { "type": "expression", "value": "record.needs_review == true" } 
+    } 
+  },
+  "nodes": [
+    {
+      "id": "approval_step",
+      "type": "FORM",
+      "label": "Approve STRETCH Role",
+      "config": {
+        "input_schema": {
+          "type": "object",
+          "properties": { 
+            "approve": { "type": "boolean", "title": "Approve application?" }
+          },
+          "required": ["approve"]
+        }
+      }
+    },
+    { "id": "end", "type": "END", "label": "Done" }
+  ],
+  "edges": [
+    { "id": "e1", "source": "approval_step", "target": "end" }
+  ],
+  "visibility": "POD"
+}

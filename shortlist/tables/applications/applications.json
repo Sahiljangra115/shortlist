@@ -1,0 +1,35 @@
+{
+  // One row per evaluated job. Shared (no RLS) because this demo is a single operator
+  // and the board app reads every row.
+  "name": "applications",
+  "primary_key_column": "id",
+  "enable_rls": false,
+  "visibility": "POD",
+  "columns": [
+    { "name": "company", "type": "TEXT", "required": true, "max_length": 200 },
+    { "name": "role", "type": "TEXT", "required": true, "max_length": 240 },
+    { "name": "jd_text", "type": "TEXT" },
+
+    // The verdict and the score behind it. TEXT (not ENUM) so the human-readable
+    // "STRONG FIT" label with a space imports cleanly; the agent output_schema constrains it.
+    { "name": "verdict", "type": "TEXT", "max_length": 16 },   // STRONG FIT | STRETCH | SKIP
+    { "name": "score", "type": "FLOAT" },
+
+    // Pipeline state. Labels lifted from career-ops/templates/states.yml:
+    // Evaluated, Applied, Responded, Interview, Offer, Rejected, Discarded, SKIP
+    { "name": "status", "type": "TEXT", "required": true, "default": "Evaluated", "max_length": 20 },
+
+    // proof = [{requirement, resume_evidence}] ; resume_evidence is verbatim from the resume.
+    { "name": "proof", "type": "JSON" },
+    { "name": "gaps", "type": "JSON" },
+    { "name": "draft_message", "type": "TEXT" },
+
+    // needs_review is true for STRETCH rows -> they surface in the review queue.
+    { "name": "needs_review", "type": "BOOLEAN", "default": false },
+    // verified is set true by the verify_citation function when every quote is real.
+    { "name": "verified", "type": "BOOLEAN", "default": false },
+
+    { "name": "notes", "type": "TEXT" }
+  ],
+  "config": {}
+}

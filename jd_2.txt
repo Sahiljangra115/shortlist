@@ -1,0 +1,16 @@
+Title: Machine Learning Engineer - Platform
+Company: CloudScale AI
+
+Responsibilities:
+- Build large-scale distributed training pipelines for LLMs using PyTorch.
+- Deploy ML models to production on Kubernetes (EKS).
+- Optimize model latency using ONNX and TensorRT.
+- Design high-performance REST APIs for model serving.
+- Manage CI/CD pipelines for machine learning workflows.
+
+Required Skills:
+- 3+ years of experience with Python and PyTorch.
+- Experience with distributed training (DeepSpeed, Megatron).
+- Strong background in Kubernetes and Docker.
+- Experience with FastAPI or Flask for model serving.
+- Experience optimizing models with ONNX Runtime.

@@ -1,0 +1,18 @@
+[project]
+name = "gappy"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "venv",
+]
+
+[tool.uv.workspace]
+members = [
+    "vevn",
+    "venv",
+]
+
+[tool.uv.sources]
+venv = { workspace = true }

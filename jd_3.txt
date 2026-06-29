@@ -1,0 +1,16 @@
+Title: Embedded Software Engineer - Computer Vision
+Company: AutoDrone Inc.
+
+Responsibilities:
+- Write C++ firmware for autonomous drone flight controllers.
+- Optimize computer vision algorithms (object detection) on edge devices.
+- Develop drivers for IMUs and camera sensors using I2C/SPI on RTOS.
+- Work with ROS 2 Nav2 stack for autonomous navigation.
+- Implement sensor fusion algorithms (Kalman Filters).
+
+Required Skills:
+- Experience in C/C++ and RTOS (FreeRTOS preferred).
+- Hands on experience with computer vision models like YOLO.
+- Experience with embedded sensors and protocols (I2C, SPI, UART).
+- Experience with ROS 2 and Gazebo simulation.
+- Bachelor's degree in CS, EE, or Robotics.

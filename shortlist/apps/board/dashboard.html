@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shortlist — Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <a href="/" class="side-brand" style="text-decoration:none; color:inherit;">
+        <div class="logo-mark"><div class="logo-outer"></div><div class="logo-inner"></div></div>
+        <span class="brand">Shortlist</span>
+      </a>
+      <nav class="side-nav">
+        <button class="side-link" data-tab="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="side-link" data-tab="watch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+          <span>Applications</span>
+        </button>
+        <button class="side-link" data-tab="newsletters">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path><polyline points="22 6 12 13 2 6"></polyline></svg>
+          <span>Review Queue</span>
+        </button>
+        <button class="side-link" data-tab="bookmarks">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+          <span>Upload Resume</span>
+        </button>
+        <button class="side-link" data-tab="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Settings</span>
+        </button>
+      </nav>
+      <div class="side-foot">
+        <button class="side-link" id="logout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Log out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <div class="main">
+      <header class="topbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="search" placeholder="Search applications and JDs" aria-label="Search">
+        </div>
+        <div class="topbar-right">
+          <div class="user-chip">
+            <span class="uname" id="user-name">Applicant</span>
+            <div class="avatar-ini" id="user-ini">SL</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+
+        <!-- HOME -->
+        <section class="view" data-view="home">
+          <div class="view-head">
+            <h1 id="greeting">Welcome back</h1>
+            <p>Ready to evaluate more roles?</p>
+          </div>
+          <div class="section-label">Recent Applications</div>
+          <div class="rail" id="home-videos"></div>
+          <div class="section-label">Action Required: Review Queue</div>
+          <div class="nl-list" id="home-news"></div>
+        </section>
+
+        <!-- WATCH -> APPLICATIONS -->
+        <section class="view" data-view="watch">
+          <div class="view-head">
+            <h1>Applications</h1>
+            <p>Track all your evaluated roles and verdicts.</p>
+          </div>
+          <div class="vid-grid" id="vid-grid"></div>
+        </section>
+
+        <!-- PLAYER -> VERDICT DETAILS -->
+        <section class="view" data-view="player">
+          <button class="back-btn" data-back="watch">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back to Applications
+          </button>
+          <div class="player">
+            <div class="player-info" style="margin-top:20px;">
+              <h1 id="player-title"></h1>
+              <div class="by"><span id="player-author"></span></div>
+              <p id="player-desc"></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- NEWSLETTERS -> REVIEW QUEUE -->
+        <section class="view" data-view="newsletters">
+          <div class="view-head">
+            <h1>Review Queue</h1>
+            <p>STRETCH roles waiting for your approval before applying.</p>
+          </div>
+          <div class="nl-list" id="nl-list"></div>
+        </section>
+
+        <!-- READER -> REVIEW DETAILS -->
+        <section class="view" data-view="reader">
+          <button class="back-btn" data-back="newsletters">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back to Queue
+          </button>
+          <article class="reader">
+            <div class="kicker" id="reader-kicker"></div>
+            <h1 id="reader-title"></h1>
+            <div class="meta" id="reader-meta"></div>
+            <div id="reader-body"></div>
+          </article>
+        </section>
+
+        <!-- SAVED -> UPLOAD RESUME -->
+        <section class="view" data-view="bookmarks">
+          <div class="view-head">
+            <h1>Resumes</h1>
+            <p>Keep tailored resumes for different companies. The active one is used when you run a match.</p>
+          </div>
+
+          <!-- Upload drop zone -->
+          <div id="drop-zone" style="
+            border: 2px dashed rgba(255,255,255,0.15);
+            border-radius: 16px;
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+            margin-bottom: 32px;
+          ">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 12px; display:block;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <p style="color:rgba(255,255,255,0.5); margin:0 0 4px; font-size:15px;">Click to select or drag and drop</p>
+            <p style="color:rgba(255,255,255,0.25); margin:0; font-size:13px;">Accepts .md or .txt files</p>
+            <!-- hidden real file input -->
+            <input type="file" id="resume-file" accept=".md,.txt" style="display:none;" />
+          </div>
+
+          <!-- Upload status message -->
+          <div id="upload-status" style="margin-bottom:16px; font-size:14px; min-height:20px;"></div>
+
+          <!-- Resume list -->
+          <div id="resume-list" style="display:grid; gap:12px;"></div>
+        </section>
+
+        <!-- SETTINGS (placeholder) -->
+        <section class="view" data-view="settings">
+          <div class="empty">
+            <div class="logo-mark"><div class="logo-outer"></div><div class="logo-inner"></div></div>
+            <h2>Settings</h2>
+            <p>Account, notifications, and application preferences will live here.</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/lemma-integration.js"></script>
+</body>
+</html>

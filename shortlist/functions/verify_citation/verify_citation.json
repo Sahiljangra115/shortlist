@@ -1,0 +1,13 @@
+{
+  "name": "verify_citation",
+  "description": "Asserts every proof.resume_evidence in an application row is a verbatim substring of the resume. Sets verified=true when all quotes are real, otherwise flags the row. This is the anti-hallucination check behind the demo.",
+  "type": "API",
+  "visibility": "POD",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "applications",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] },
+    { "resource_type": "folder", "resource_name": "/resume",
+      "permission_ids": ["folder.read"] }
+  ]}
+}
