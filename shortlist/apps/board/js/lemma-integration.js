@@ -185,6 +185,8 @@ async function setupDashboard() {
     // Load existing resumes from Lemma pod files
     await loadResumeList();
     await loadApplications();
+
+    setupApplyByLink(); // isolated feature; safe to remove with its UI
 }
 
 // ── Resumes are stored as /resume/<name>.md in the pod ─────────────────────
@@ -278,6 +280,81 @@ function setStatus(el, msg, color) {
     if (!el) return;
     el.textContent = msg;
     el.style.color = color || 'rgba(255,255,255,0.5)';
+}
+
+// ── Apply by Link (isolated feature) ───────────────────────────────────────
+// Paste a job URL + JD text -> run the matcher against the active resume ->
+// record the application and keep a tracked-links list with one-click "open &
+// apply". Remove this block + the dashboard.html UI to disable.
+// ponytail: tracked links live in localStorage (per-device), not the pod table.
+// The real verdict row is still written by the matcher into the applications table.
+function getTrackedLinks() {
+    try { return JSON.parse(localStorage.getItem('sl_tracked_links') || '[]'); } catch (_) { return []; }
+}
+function addTrackedLink(item) {
+    var list = getTrackedLinks();
+    list.unshift(item);
+    localStorage.setItem('sl_tracked_links', JSON.stringify(list.slice(0, 50)));
+}
+function renderTrackedLinks() {
+    var box = document.getElementById('al-tracked');
+    if (!box) return;
+    var list = getTrackedLinks();
+    if (!list.length) {
+        box.innerHTML = '<p style="color:rgba(255,255,255,0.3); font-size:14px;">No tracked links yet.</p>';
+        return;
+    }
+    // Escape text and only allow http(s) URLs (these strings reach innerHTML/href).
+    function esc(s) { return String(s || '').replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function safeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : ''; }
+
+    box.innerHTML = list.map(function (it) {
+        var label = esc((it.role || 'Role') + (it.company ? ' @ ' + it.company : ''));
+        var badge = it.verdict ? '<span style="font-size:12px; color:#9fb0c3;">' + esc(it.verdict) + '</span>' : '';
+        var url = safeUrl(it.url);
+        var applyBtn = url
+            ? '<a href="' + esc(url) + '" target="_blank" rel="noopener" class="btn-glass" style="font-size:12px; padding:4px 12px; text-decoration:none;">Open &amp; apply</a>'
+            : '';
+        return '<div style="display:flex; align-items:center; gap:12px; padding:12px 16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px;">' +
+            '<span style="flex:1; font-size:14px; color:rgba(255,255,255,0.85);">' + label + '</span>' +
+            badge +
+            '<span style="font-size:12px; color:rgba(255,255,255,0.4);">' + (it.status || 'Tracked') + '</span>' +
+            applyBtn +
+            '</div>';
+    }).join('');
+}
+function setupApplyByLink() {
+    var btn = document.getElementById('al-run');
+    if (!btn) return;
+    renderTrackedLinks();
+    btn.addEventListener('click', async function () {
+        var url = (document.getElementById('al-url').value || '').trim();
+        var jd = (document.getElementById('al-jd').value || '').trim();
+        var out = document.getElementById('al-result');
+        if (!jd) { setStatus(out, 'Paste the job description text first.', '#f0616d'); return; }
+        btn.disabled = true; btn.textContent = 'Matching...';
+        setStatus(out, 'Running the matcher against your active resume...', '#9fb0c3');
+        try {
+            var msg = (url ? 'Job URL: ' + url + '\n\n' : '') +
+                'Company: (infer from JD)\nRole: (infer from JD)\n\nJob description:\n' + jd;
+            var res = await client.agents.run('matcher', msg, { title: 'Apply by link' });
+            var v = res || {};
+            addTrackedLink({
+                url: url, company: v.company || '', role: v.role || '',
+                verdict: v.verdict || '', status: 'Tracked', when: Date.now()
+            });
+            renderTrackedLinks();
+            loadApplications();
+            setStatus(out, 'Matched and tracked. See it in Applications / Review Queue.', '#10b981');
+            document.getElementById('al-url').value = '';
+            document.getElementById('al-jd').value = '';
+        } catch (e) {
+            setStatus(out, 'Match failed: ' + (e.message || e), '#f0616d');
+        } finally {
+            btn.disabled = false; btn.textContent = 'Match & Track';
+        }
+    });
 }
 
 async function loadApplications() {
