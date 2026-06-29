@@ -44,6 +44,7 @@ This file tracks the implementation milestones, completed tasks, and upcoming go
 
 ### 6. Hosting & Cloud Deploy
 - [x] Deploy and host the static frontend board application on Lemma's server at https://shortlist-board.apps.lemma.work.
+- [x] Fix JavaScript runtime error `client.files.write is not a function` in `lemma-integration.js` by monkeypatching the SDK with correct update/upload/download logic and redeploying.
 
 ## Next Steps
 - [ ] Record a 2-3 minute screen demo of the fully functioning local application.

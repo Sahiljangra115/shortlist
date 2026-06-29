@@ -6,7 +6,7 @@ This document captures the current status of the Shortlist project, version trac
 All core loops and requested features are fully implemented, tested, and functioning. The application runs locally using a FastAPI backend and preserves all user data, applications history, and resume uploads inside local files under the `data/` directory (no database required).
 
 ## Versioning
-- **Current Version:** `v1.0.4-local`
+- **Current Version:** `v1.0.5-local`
 - **Release Date:** June 29, 2026
 
 ## Features Implemented
@@ -18,6 +18,7 @@ All core loops and requested features are fully implemented, tested, and functio
 6. **User Preferences**: Saves Display Name, Email, notifications checkbox, and cover letter tone choices.
 
 ## Version History
+- **v1.0.5-local** (June 29, 2026): Fixed JavaScript runtime error `client.files.write is not a function` in `lemma-integration.js` by monkeypatching the SDK namespace with correct blob upload/update methods and redeployed to `https://shortlist-board.apps.lemma.work`.
 - **v1.0.4-local** (June 29, 2026): Fixed a bug where PDF uploads were corrupted on localhost (now extracting text on the fly), preventing indexing and write errors when syncing to Lemma pod.
 - **v1.0.3-local** (June 29, 2026): Deployed and hosted the static frontend board application on Lemma's server at https://shortlist-board.apps.lemma.work.
 - **v1.0.2-local** (June 29, 2026): Wired the FastAPI backend to the Lemma pod and its `matcher` agent, enabling automatic active resume syncing to `/resume/cv.md` and invoking the cloud matching agent.

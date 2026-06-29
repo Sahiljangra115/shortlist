@@ -18,3 +18,6 @@ data/
 .playwright-mcp/
 *.png
 .python-version
+
+# Build artifacts (app bundles produced by `lemma apps deploy`)
+*.zip
