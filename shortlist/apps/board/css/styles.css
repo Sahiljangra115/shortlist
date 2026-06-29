@@ -132,7 +132,8 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 .search-sec .lead { font-size: 1.125rem; color: hsl(var(--muted-foreground)); max-width: 640px; margin: 0 auto 96px; line-height: 1.55; }
 .platform-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-bottom: 80px; }
 .platform-card { text-align: center; }
-.platform-card img { width: 160px; height: 160px; margin: 0 auto 22px; border-radius: 36px; }
+.platform-card img,
+.platform-card svg { width: 160px; height: 160px; margin: 0 auto 22px; border-radius: 36px; display: block; }
 .platform-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
 .platform-card p { font-size: 0.875rem; color: hsl(var(--muted-foreground)); line-height: 1.5; max-width: 280px; margin: 0 auto; }
 .search-tagline { font-size: 0.875rem; color: hsl(var(--muted-foreground)); text-align: center; }
