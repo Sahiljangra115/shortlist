@@ -87,23 +87,12 @@
   });
 })();
 
-/* ── 5. Login form ── */
-(function () {
-  var form = document.getElementById('auth-form');
-  if (!form) return;
-  var err = document.getElementById('auth-err');
-  var emailRe = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-  function fail(msg) { if (err) { err.textContent = msg; err.style.display = 'block'; } }
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var email = form.email.value.trim();
-    var pw = form.password.value;
-    if (!emailRe.test(email)) return fail('Enter a valid email address.');
-    if (pw.length < 6) return fail('Password must be at least 6 characters.');
-    try { localStorage.setItem('mindloop_user', email); } catch (_) {}
-    window.location.href = 'dashboard.html';
-  });
-})();
+/* ── 5. Login form ──
+   Real auth is owned by lemma-integration.js setupLogin(), which routes the
+   form submit through Lemma's hosted sign-in/sign-up (real user DB + email/
+   password verification). The old fake handler here accepted ANY valid-format
+   email + 6-char password and skipped straight to the dashboard, with no
+   database and no verification, so it has been removed. Keep the real one. */
 
 /* ── 6. Dashboard ── */
 (function () {
@@ -287,9 +276,13 @@
     });
   });
   var logout = document.getElementById('logout');
-  if (logout) logout.addEventListener('click', function () {
+  if (logout) logout.addEventListener('click', async function () {
     try { localStorage.removeItem('mindloop_user'); } catch (_) {}
-    window.location.href = 'login.html';
+    // End the REAL Lemma session (client is a global from lemma-integration.js).
+    // Without this the session cookie survives and boot() bounces straight back
+    // into the dashboard -> the logout loop.
+    try { if (window.client && client.auth) await client.auth.signOut(); } catch (_) {}
+    window.location.href = 'index.html';
   });
 
   var greet = document.getElementById('greeting');

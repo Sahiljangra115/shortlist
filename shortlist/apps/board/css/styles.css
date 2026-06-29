@@ -103,8 +103,8 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 .nav-right { display: flex; align-items: center; gap: 10px; }
 .nav-cta { font-size: 0.875rem; font-weight: 500; color: hsl(var(--foreground)); padding: 8px 18px; border-radius: 999px; border: 1px solid hsl(var(--border)); transition: background 0.2s; }
 .nav-cta:hover { background: hsl(var(--secondary)); }
-.social-btn { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: hsl(var(--foreground)); }
-.social-btn svg { width: 18px; height: 18px; }
+.nav-cta.primary { background: hsl(var(--foreground)); color: hsl(var(--background)); border-color: hsl(var(--foreground)); }
+.nav-cta.primary:hover { background: hsl(var(--foreground)); opacity: 0.88; }
 @media (max-width: 900px) {
   .navbar { padding: 14px 24px; }
   .nav-links { display: none; }
@@ -133,7 +133,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 .platform-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-bottom: 80px; }
 .platform-card { text-align: center; }
 .platform-card img,
-.platform-card svg { width: 160px; height: 160px; margin: 0 auto 22px; border-radius: 36px; display: block; }
+.platform-card svg { width: 112px; height: 112px; margin: 0 auto 20px; border-radius: 26px; display: block; }
 .platform-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
 .platform-card p { font-size: 0.875rem; color: hsl(var(--muted-foreground)); line-height: 1.5; max-width: 280px; margin: 0 auto; }
 .search-tagline { font-size: 0.875rem; color: hsl(var(--muted-foreground)); text-align: center; }

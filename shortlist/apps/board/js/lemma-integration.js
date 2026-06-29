@@ -35,6 +35,22 @@ var client;
 async function boot() {
   try {
     client = new window.LemmaClient.LemmaClient();
+    client.files.write = async function (path, text) {
+        var lastSlash = path.lastIndexOf('/');
+        var dir = lastSlash <= 0 ? '/' : path.substring(0, lastSlash);
+        var name = lastSlash === -1 ? path : path.substring(lastSlash + 1);
+        var blob = new Blob([text], { type: 'text/markdown' });
+        try {
+            await client.files.update(path, { file: blob });
+        } catch (e) {
+            try { await client.files.delete(path); } catch(_) {}
+            await client.files.upload(blob, { name: name, directoryPath: dir });
+        }
+    };
+    client.files.read = async function (path) {
+        var bytes = await client.files.download(path);
+        return new TextDecoder().decode(bytes);
+    };
     var state = await client.initialize();
 
     var p = window.location.pathname;
@@ -42,10 +58,11 @@ async function boot() {
     var onIndex = p.includes("index.html") || p === "/" || p.endsWith("/");
     var authed = state.status === "authenticated";
 
-    // After sign-in the auth service returns to the page that called it
-    // (login.html). Without this, an authenticated user just sees the login
-    // form again -> the "login loop". Forward them into the app.
-    if (authed && (onLogin || onIndex)) {
+    // After sign-in the auth service returns to login.html. Forward them into
+    // the app. NOTE: only from login.html -- an authenticated user must still be
+    // able to view the landing page (index.html) when they click the logo,
+    // otherwise index -> dashboard bounces forever (the "login loop").
+    if (authed && onLogin) {
        window.location.href = "dashboard.html";
        return;
     }
@@ -101,14 +118,11 @@ async function setupDashboard() {
         client.datastore.watchChanges({ onChange: function () { loadApplications(); } });
     } catch (e) {}
 
-    // Add JD text area to topbar for running matches
+    // ponytail: topbar JD quick-match removed per request. Matching now lives
+    // only in the "Apply by Link" tab. Topbar keeps just the user chip.
     var topbar = document.querySelector('.topbar');
     if (topbar) {
         topbar.innerHTML = `
-        <div style="flex:1; display:flex; gap:10px;">
-            <textarea id="jd-input" placeholder="Paste job description here..." style="flex:1; background:rgba(255,255,255,0.05); color:white; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px; resize:none; height:40px;"></textarea>
-            <button id="run-match-btn" class="btn-primary" style="height:40px; padding:0 20px;">Match</button>
-        </div>
         <div class="topbar-right">
           <div class="user-chip">
             <span class="uname" id="user-name">Applicant</span>
@@ -116,33 +130,6 @@ async function setupDashboard() {
           </div>
         </div>
         `;
-        
-        document.getElementById('run-match-btn').addEventListener('click', async function() {
-            var jd = document.getElementById('jd-input').value;
-            if (!jd) return;
-            var btn = this;
-            btn.textContent = "Running...";
-            btn.disabled = true;
-            try {
-                var message = "Company: (infer from JD)\\nRole: (infer from JD)\\n\\nJob description:\\n" + jd;
-                await client.agents.run("matcher", message, { title: "Role match" });
-                document.getElementById('jd-input').value = '';
-                loadApplications();
-            } catch(e) {
-                alert("Match failed: " + e.message);
-            } finally {
-                btn.textContent = "Match";
-                btn.disabled = false;
-            }
-        });
-    }
-
-    // Check if we have a pending JD from index
-    var pending = localStorage.getItem('pending_jd');
-    if (pending) {
-        document.getElementById('jd-input').value = pending;
-        localStorage.removeItem('pending_jd');
-        document.getElementById('run-match-btn').click();
     }
 
     // ── Resume upload: drop zone + file picker ────────────────────────────
@@ -206,7 +193,13 @@ async function uploadResume(file) {
         setStatus(statusDiv, 'Uploaded: ' + name, '#10b981');
         await loadResumeList();
     } catch (e) {
-        setStatus(statusDiv, 'Upload failed: ' + (e.message || e), '#f0616d');
+        var msg = e.message || String(e);
+        // ponytail: /resume is a pod-shared folder; only pod members hold grants on it.
+        // A non-member signed-in account hits "Missing permission folder.read".
+        if (/permission/i.test(msg)) {
+            msg = "No access to the resume folder. Sign in with a pod-member account (the one that owns this pod).";
+        }
+        setStatus(statusDiv, 'Upload failed: ' + msg, '#f0616d');
     }
 }
 
@@ -329,25 +322,28 @@ function setupApplyByLink() {
     if (!btn) return;
     renderTrackedLinks();
     btn.addEventListener('click', async function () {
-        var url = (document.getElementById('al-url').value || '').trim();
+        var company = (document.getElementById('al-company').value || '').trim();
+        var position = (document.getElementById('al-position').value || '').trim();
         var jd = (document.getElementById('al-jd').value || '').trim();
         var out = document.getElementById('al-result');
         if (!jd) { setStatus(out, 'Paste the job description text first.', '#f0616d'); return; }
         btn.disabled = true; btn.textContent = 'Matching...';
         setStatus(out, 'Running the matcher against your active resume...', '#9fb0c3');
         try {
-            var msg = (url ? 'Job URL: ' + url + '\n\n' : '') +
-                'Company: (infer from JD)\nRole: (infer from JD)\n\nJob description:\n' + jd;
+            var msg = 'Company: ' + (company || '(infer from JD)') +
+                '\nRole: ' + (position || '(infer from JD)') +
+                '\n\nJob description:\n' + jd;
             var res = await client.agents.run('matcher', msg, { title: 'Apply by link' });
             var v = res || {};
             addTrackedLink({
-                url: url, company: v.company || '', role: v.role || '',
+                url: '', company: company || v.company || '', role: position || v.role || '',
                 verdict: v.verdict || '', status: 'Tracked', when: Date.now()
             });
             renderTrackedLinks();
             loadApplications();
             setStatus(out, 'Matched and tracked. See it in Applications / Review Queue.', '#10b981');
-            document.getElementById('al-url').value = '';
+            document.getElementById('al-company').value = '';
+            document.getElementById('al-position').value = '';
             document.getElementById('al-jd').value = '';
         } catch (e) {
             setStatus(out, 'Match failed: ' + (e.message || e), '#f0616d');
@@ -355,6 +351,21 @@ function setupApplyByLink() {
             btn.disabled = false; btn.textContent = 'Match & Track';
         }
     });
+}
+
+// Structured verdict body shared by video cards (Recent Applications) and newsletter items (Review Queue)
+function buildVerdictBody(r) {
+    return [
+        'Verdict: ' + r.verdict,
+        'Requirements Matched:',
+        ...(r.proof || []).map(p => '- "' + p.requirement + '" -> "' + p.resume_evidence + '"'),
+        '',
+        'Gaps Identified:',
+        ...(r.gaps || []).map(g => '- ' + g),
+        '',
+        'Draft Intro:',
+        r.draft_message || ''
+    ];
 }
 
 async function loadApplications() {
@@ -381,9 +392,10 @@ async function loadApplications() {
             id: r.id,
             title: r.company + " - " + r.role,
             author: r.verdict + (r.score ? " (" + r.score.toFixed(1) + ")" : ""),
+            meta: r.company + " · " + new Date(r.created_at || Date.now()).toLocaleDateString() + " · Score: " + (r.score || 0).toFixed(1),
             dur: r.status,
             src: 'https://plugin-assets.open-design.ai/plugins/mindloop-landing/hf_20260325_120549_0cd82c36-56b3-4dd9-b190-069cfc3a623f-9b476a.mp4',
-            desc: "Requirements Matched: " + (r.proof ? r.proof.length : 0) + ". Gaps: " + (r.gaps ? r.gaps.length : 0) + ".\\n\\n" + (r.draft_message || '')
+            body: buildVerdictBody(r)
         }));
 
         // Populate NEWS format for Review Queue
@@ -396,17 +408,7 @@ async function loadApplications() {
             read: 'Score: ' + (r.score || 0).toFixed(1),
             kicker: r.verdict,
             excerpt: "Matches: " + (r.proof ? r.proof.length : 0) + ". Gaps: " + (r.gaps ? r.gaps.length : 0),
-            body: [
-                'Verdict: ' + r.verdict,
-                'Requirements Matched:',
-                ...(r.proof || []).map(p => '- "' + p.requirement + '" -> "' + p.resume_evidence + '"'),
-                '',
-                'Gaps Identified:',
-                ...(r.gaps || []).map(g => '- ' + g),
-                '',
-                'Draft Intro:',
-                r.draft_message || ''
-            ],
+            body: buildVerdictBody(r),
             rawRecord: r // for approve logic
         }));
 
@@ -445,9 +447,16 @@ function renderGrid(containerId, data, renderType) {
                 var pt = document.getElementById('player-title');
                 if (pt) pt.textContent = v.title;
                 var pa = document.getElementById('player-author');
-                if (pa) pa.textContent = v.author + " — Status: " + v.dur;
+                if (pa) pa.textContent = v.meta;
                 var pd = document.getElementById('player-desc');
-                if (pd) pd.textContent = v.desc;
+                if (pd) {
+                    pd.innerHTML = '';
+                    v.body.forEach(function (line) {
+                        var pEl = document.createElement('p');
+                        pEl.textContent = line;
+                        pd.appendChild(pEl);
+                    });
+                }
                 showViewNode('player');
             });
         } else {

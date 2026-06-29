@@ -168,11 +168,16 @@
         <section class="view" data-view="applylink">
           <div class="view-head">
             <h1>Apply by Link</h1>
-            <p>Paste a job link and its description. Shortlist matches it to your active resume, tracks it, and gives you a one-click way to open and apply.</p>
+            <p>Enter the company, position, and job description. Shortlist matches it to your active resume and tracks it.</p>
           </div>
 
           <div style="display:grid; gap:16px; max-width:720px;">
-            <input id="al-url" type="url" placeholder="https://company.com/careers/the-role"
+            <!-- ponytail: link field commented out per request; matcher infers nothing from a URL now -->
+            <!-- <input id="al-url" type="url" placeholder="https://company.com/careers/the-role"
+              style="background:rgba(255,255,255,0.05); color:#fff; border:1px solid rgba(255,255,255,0.12); border-radius:10px; padding:14px 16px; font-size:14px;" /> -->
+            <input id="al-company" type="text" placeholder="Company name"
+              style="background:rgba(255,255,255,0.05); color:#fff; border:1px solid rgba(255,255,255,0.12); border-radius:10px; padding:14px 16px; font-size:14px;" />
+            <input id="al-position" type="text" placeholder="Position / role title"
               style="background:rgba(255,255,255,0.05); color:#fff; border:1px solid rgba(255,255,255,0.12); border-radius:10px; padding:14px 16px; font-size:14px;" />
             <textarea id="al-jd" rows="8" placeholder="Paste the full job description text here..."
               style="background:rgba(255,255,255,0.05); color:#fff; border:1px solid rgba(255,255,255,0.12); border-radius:10px; padding:14px 16px; font-size:14px; resize:vertical;"></textarea>
